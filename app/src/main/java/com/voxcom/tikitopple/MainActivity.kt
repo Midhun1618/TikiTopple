@@ -4,9 +4,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -37,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         const val ANIMATION_DURATION = 220L
     }
     private lateinit var actionCardBtn: ImageView
+    private lateinit var secretCardBtn: ImageView
 
     private enum class ActionCard {
         UP1,
@@ -62,9 +66,13 @@ class MainActivity : AppCompatActivity() {
         board = findViewById(R.id.board)
         arrayText = findViewById(R.id.array)
         actionCardBtn = findViewById(R.id.actionCardBtn)
+        secretCardBtn = findViewById(R.id.secretCardBtn)
 
         actionCardBtn.setOnClickListener {
             showActionCardDialog()
+        }
+        secretCardBtn.setOnClickListener {
+            showSecretCardDialog()
         }
 
         createTikis()
@@ -525,5 +533,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         dialog.show()
+    }
+    private fun showSecretCardDialog() {
+
+        val dialogView = layoutInflater.inflate(
+            R.layout.dialog_secret_card,
+            null
+        )
+
+        val rotateImg = dialogView.findViewById<ImageView>(R.id.rotatImg)
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        dialog.setOnShowListener {
+            val animation = AnimationUtils.loadAnimation(
+                this,
+                R.anim.rotater
+            )
+            rotateImg.startAnimation(animation)
+        }
+
+        dialog.setOnDismissListener {
+            rotateImg.clearAnimation()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 }
