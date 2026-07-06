@@ -36,6 +36,17 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ANIMATION_DURATION = 220L
     }
+    private lateinit var actionCardBtn: ImageView
+
+    private enum class ActionCard {
+        UP1,
+        UP2,
+        UP3,
+        TOSS,
+        DESTROY
+    }
+
+    private var selectedAction = ActionCard.UP1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +61,11 @@ class MainActivity : AppCompatActivity() {
 
         board = findViewById(R.id.board)
         arrayText = findViewById(R.id.array)
+        actionCardBtn = findViewById(R.id.actionCardBtn)
+
+        actionCardBtn.setOnClickListener {
+            showActionCardDialog()
+        }
 
         createTikis()
 
@@ -108,7 +124,24 @@ class MainActivity : AppCompatActivity() {
             img.scaleType = ImageView.ScaleType.FIT_XY
 
             img.setOnClickListener {
-                tikiToss(tiki)
+
+                when (selectedAction) {
+
+                    ActionCard.UP1 ->
+                        tikiUp1(tiki)
+
+                    ActionCard.UP2 ->
+                        tikiUp2(tiki)
+
+                    ActionCard.UP3 ->
+                        tikiUp3(tiki)
+
+                    ActionCard.TOSS ->
+                        tikiToss(tiki)
+
+                    ActionCard.DESTROY ->
+                        destroyTiki(tiki)
+                }
             }
 
             board.addView(img)
@@ -453,5 +486,44 @@ class MainActivity : AppCompatActivity() {
     private fun getYForIndex(index: Int): Float {
         // Stacks items up from the bottom of the board
         return board.height - (boardOrder.size - index) * blockSpacing
+    }
+    private fun showActionCardDialog() {
+
+        val dialogView = layoutInflater.inflate(
+            R.layout.dialog_action_card,
+            null
+        )
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        fun choose(card: ActionCard, imageRes: Int) {
+            selectedAction = card
+            actionCardBtn.setImageResource(imageRes)
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<ImageView>(R.id.card1).setOnClickListener {
+            choose(ActionCard.UP1, R.drawable.t1)
+        }
+
+        dialogView.findViewById<ImageView>(R.id.card2).setOnClickListener {
+            choose(ActionCard.UP2, R.drawable.t2)
+        }
+
+        dialogView.findViewById<ImageView>(R.id.card3).setOnClickListener {
+            choose(ActionCard.UP3, R.drawable.t3)
+        }
+
+        dialogView.findViewById<ImageView>(R.id.card4).setOnClickListener {
+            choose(ActionCard.TOSS, R.drawable.t4)
+        }
+
+        dialogView.findViewById<ImageView>(R.id.card5).setOnClickListener {
+            choose(ActionCard.DESTROY, R.drawable.t5)
+        }
+
+        dialog.show()
     }
 }
