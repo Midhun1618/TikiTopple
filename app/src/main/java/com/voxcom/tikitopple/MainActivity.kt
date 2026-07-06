@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             img.scaleType = ImageView.ScaleType.FIT_XY
 
             img.setOnClickListener {
-                destroyTiki(tiki)
+                tikiToss(tiki)
             }
 
             board.addView(img)
@@ -175,10 +175,228 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun tikiUp2(selected: Tiki) {
+
+        val oldIndex = boardOrder.indexOf(selected)
+        if (oldIndex < 2) return
+
+        val targetIndex = oldIndex - 2
+
+        val first = boardOrder[targetIndex]
+        val second = boardOrder[targetIndex + 1]
+
+        setEnabled(false)
+
+        val moveRight = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            sideOffset
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveFirstDown = ObjectAnimator.ofFloat(
+            first.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex + 1)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveSecondDown = ObjectAnimator.ofFloat(
+            second.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex + 2)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveSelectedUp = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveLeft = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            0f
+        ).apply { duration = ANIMATION_DURATION }
+
+        AnimatorSet().apply {
+
+            playSequentially(
+                moveRight,
+                AnimatorSet().apply {
+                    playTogether(moveFirstDown, moveSecondDown)
+                },
+                moveSelectedUp,
+                moveLeft
+            )
+
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+
+                    boardOrder.removeAt(oldIndex)
+                    boardOrder.add(targetIndex, selected)
+
+                    refreshBoard()
+                    updateArrayText()
+                    setEnabled(true)
+                }
+            })
+
+            start()
+        }
+    }
+
+    private fun tikiUp3(selected: Tiki) {
+
+        val oldIndex = boardOrder.indexOf(selected)
+        if (oldIndex < 3) return
+
+        val targetIndex = oldIndex - 3
+
+        val first = boardOrder[targetIndex]
+        val second = boardOrder[targetIndex + 1]
+        val third = boardOrder[targetIndex + 2]
+
+        setEnabled(false)
+
+        val moveRight = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            sideOffset
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveFirstDown = ObjectAnimator.ofFloat(
+            first.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex + 1)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveSecondDown = ObjectAnimator.ofFloat(
+            second.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex + 2)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveThirdDown = ObjectAnimator.ofFloat(
+            third.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex + 3)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveSelectedUp = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_Y,
+            getYForIndex(targetIndex)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveLeft = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            0f
+        ).apply { duration = ANIMATION_DURATION }
+
+        AnimatorSet().apply {
+
+            playSequentially(
+                moveRight,
+                AnimatorSet().apply {
+                    playTogether(
+                        moveFirstDown,
+                        moveSecondDown,
+                        moveThirdDown
+                    )
+                },
+                moveSelectedUp,
+                moveLeft
+            )
+
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+
+                    boardOrder.removeAt(oldIndex)
+                    boardOrder.add(targetIndex, selected)
+
+                    refreshBoard()
+                    updateArrayText()
+                    setEnabled(true)
+                }
+            })
+
+            start()
+        }
+    }
+
+    private fun tikiToss(selected: Tiki) {
+
+        val oldIndex = boardOrder.indexOf(selected)
+        if (oldIndex == boardOrder.lastIndex) return   // Already at bottom
+
+        setEnabled(false)
+
+        val moveRight = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            sideOffset
+        ).apply { duration = ANIMATION_DURATION }
+
+        // Move every tiki below the selected one up by one position
+        val moveOthers = AnimatorSet()
+        val animators = mutableListOf<Animator>()
+
+        for (i in oldIndex + 1 until boardOrder.size) {
+            val tiki = boardOrder[i]
+
+            animators += ObjectAnimator.ofFloat(
+                tiki.view,
+                View.TRANSLATION_Y,
+                getYForIndex(i - 1)
+            ).apply {
+                duration = ANIMATION_DURATION
+            }
+        }
+
+        moveOthers.playTogether(animators)
+
+        val moveSelectedDown = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_Y,
+            getYForIndex(boardOrder.lastIndex)
+        ).apply { duration = ANIMATION_DURATION }
+
+        val moveLeft = ObjectAnimator.ofFloat(
+            selected.view,
+            View.TRANSLATION_X,
+            0f
+        ).apply { duration = ANIMATION_DURATION }
+
+        AnimatorSet().apply {
+
+            playSequentially(
+                moveRight,
+                moveOthers,
+                moveSelectedDown,
+                moveLeft
+            )
+
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+
+                    boardOrder.removeAt(oldIndex)
+                    boardOrder.add(selected)
+
+                    refreshBoard()
+                    updateArrayText()
+
+                    setEnabled(true)
+                }
+            })
+
+            start()
+        }
+    }
+
     private fun refreshBoard() {
         boardOrder.forEachIndexed { index, tiki ->
             tiki.view.translationX = 0f
-            tiki.view.translationY = index * blockSpacing
+            tiki.view.translationY = getYForIndex(index)
         }
     }
 
@@ -220,22 +438,20 @@ class MainActivity : AppCompatActivity() {
         }, frameDuration * 4)
 
         tiki.view.postDelayed({
-
             val removedIndex = boardOrder.indexOf(tiki)
 
             board.removeView(tiki.view)
-
             boardOrder.removeAt(removedIndex)
 
-            repeat(removedIndex) {
-                boardOrder.add(boardOrder.removeAt(0))
-            }
-
+            // Simply refresh the board; gravity math handles the rest!
             refreshBoard()
             updateArrayText()
 
             setEnabled(true)
-
         }, frameDuration * 5)
+    }
+    private fun getYForIndex(index: Int): Float {
+        // Stacks items up from the bottom of the board
+        return board.height - (boardOrder.size - index) * blockSpacing
     }
 }
