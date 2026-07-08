@@ -1,4 +1,4 @@
-package com.voxcom.tikitopple
+package com.voxcom.tikitopple.utils
 
 object PlayerNameGenerator {
 

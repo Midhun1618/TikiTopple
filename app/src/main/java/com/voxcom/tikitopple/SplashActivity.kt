@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.voxcom.tikitopple.utils.PlayerNameGenerator
 
 class SplashActivity : AppCompatActivity() {
 

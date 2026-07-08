@@ -1,20 +1,270 @@
 package com.voxcom.tikitopple
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.voxcom.tikitopple.adapter.LobbyAdapter
+import com.voxcom.tikitopple.manager.RoomCallback
+import com.voxcom.tikitopple.manager.RoomManager
+import com.voxcom.tikitopple.model.LobbyPlayer
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), RoomCallback {
+
+    private lateinit var usernameTv: TextView
+
+    private lateinit var hostBtn: Button
+    private lateinit var joinBtn: Button
+
+    private lateinit var hostLL: LinearLayout
+    private lateinit var joinLL: LinearLayout
+
+    private lateinit var roomCodeTv: TextView
+    private lateinit var roomCodeEt: EditText
+
+    private lateinit var copyBtn: Button
+    private lateinit var searchBtn: Button
+
+    private lateinit var lobbyList: LinearLayout
+    private lateinit var playersList: ListView
+    private lateinit var readyBtn: Button
+
+    private lateinit var adapter: LobbyAdapter
+
+    private lateinit var roomManager: RoomManager
+
+    private val auth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance().reference
+
+    private lateinit var uid: String
+    private var ready = false
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         setContentView(R.layout.activity_home)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(
+                bars.left,
+                bars.top,
+                bars.right,
+                bars.bottom
+            )
             insets
         }
+
+        initializeViews()
+
+        roomManager = RoomManager(this, this)
+
+        uid = auth.currentUser!!.uid
+
+        loadPlayer()
+
+        initializeButtons()
+
+
     }
+
+    private fun initializeViews() {
+
+        usernameTv = findViewById(R.id.usernameTv)
+
+        hostBtn = findViewById(R.id.hostBtn)
+        joinBtn = findViewById(R.id.joinBtn)
+
+        hostLL = findViewById(R.id.hostLL)
+        joinLL = findViewById(R.id.joinLL)
+
+        roomCodeTv = findViewById(R.id.roomcodeHTv)
+        roomCodeEt = findViewById(R.id.roomcodeEt)
+
+        copyBtn = findViewById(R.id.copyBtn)
+        searchBtn = findViewById(R.id.searchBtn)
+
+        searchBtn = findViewById(R.id.searchBtn)
+
+        lobbyList = findViewById(R.id.lobbyList)
+        playersList = findViewById(R.id.playersRoomList)
+
+        readyBtn = findViewById(R.id.readyBtn)
+
+        adapter = LobbyAdapter(
+            this,
+            mutableListOf()
+        )
+
+        playersList.adapter = adapter
+
+    }
+
+    private fun initializeButtons() {
+
+        hostBtn.setOnClickListener {
+
+            roomManager.createRoom()
+
+        }
+        readyBtn.setOnClickListener {
+
+            ready = !ready
+
+            roomManager.setReady(ready)
+
+            readyBtn.text =
+                if(ready)
+                    "Not Ready"
+                else
+                    "Ready"
+
+        }
+
+        joinBtn.setOnClickListener {
+
+            hostLL.visibility = View.GONE
+            joinLL.visibility = View.VISIBLE
+
+        }
+
+        copyBtn.setOnClickListener {
+
+            val clipboard =
+                getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+            clipboard.setPrimaryClip(
+
+                ClipData.newPlainText(
+                    "Room Code",
+                    roomCodeTv.text.toString()
+                )
+
+            )
+
+            Toast.makeText(
+                this,
+                "Room Code Copied",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
+
+        searchBtn.setOnClickListener {
+
+            val code =
+                roomCodeEt.text.toString()
+                    .trim()
+                    .uppercase()
+
+            if (code.isNotEmpty()) {
+
+                roomManager.joinRoom(code)
+
+            }
+
+        }
+
+    }
+
+    private fun loadPlayer() {
+
+        database.child("players")
+            .child(uid)
+            .child("name")
+            .get()
+            .addOnSuccessListener {
+
+                usernameTv.text =
+                    it.getValue(String::class.java)
+
+            }
+
+    }
+
+    // ==========================================================
+    // CALLBACKS
+    // ==========================================================
+
+    override fun onRoomCreated(roomCode: String) {
+
+        hostLL.visibility = View.VISIBLE
+
+        joinLL.visibility = View.GONE
+
+        playersList.visibility = View.VISIBLE
+
+        hostBtn.visibility = View.GONE
+        joinBtn.visibility = View.GONE
+
+        roomCodeTv.text = roomCode
+
+        roomManager.listenLobby(roomCode)
+
+    }
+
+    override fun onRoomJoined(roomCode: String) {
+
+        hostLL.visibility = View.GONE
+
+        joinLL.visibility = View.GONE
+
+        playersList.visibility = View.VISIBLE
+
+        hostBtn.visibility = View.GONE
+        joinBtn.visibility = View.GONE
+
+        roomManager.listenLobby(roomCode)
+
+    }
+
+    override fun onLobbyUpdated(players: List<LobbyPlayer>) {
+
+        adapter.updatePlayers(players)
+
+    }
+
+    override fun onGameStarted(roomCode: String) {
+
+        Toast.makeText(
+            this,
+            "Game Starting...",
+            Toast.LENGTH_SHORT
+        ).show()
+
+    }
+
+    override fun onError(message: String) {
+
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+    }
+    override fun onReadyStateChanged(
+        readyPlayers: Int,
+        totalPlayers: Int,
+        allReady: Boolean
+    ) {
+
+        if(allReady){
+            roomManager.beginGame()
+        }
+
+    }
+
 }
