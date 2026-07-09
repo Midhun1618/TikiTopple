@@ -174,13 +174,37 @@ class RoomManager(
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
+                android.util.Log.d(
+                    "ROOM_STATE",
+                    "Snapshot received"
+                )
+
                 val room = snapshot.getValue(Room::class.java)
-                    ?: return
+
+                if (room == null) {
+
+                    android.util.Log.d(
+                        "ROOM_STATE",
+                        "Room == null"
+                    )
+
+                    return
+                }
+
+                android.util.Log.d(
+                    "ROOM_STATE",
+                    "state=${room.state}, initialized=${room.initialized}"
+                )
 
                 if (
                     room.state == RoomState.PLAYING.name &&
                     room.initialized
                 ) {
+
+                    android.util.Log.d(
+                        "ROOM_STATE",
+                        "Launching MainActivity"
+                    )
 
                     roomStateListener?.let {
                         database.child("rooms")
@@ -191,17 +215,23 @@ class RoomManager(
                     roomStateListener = null
 
                     callback.onGameStarted(room.roomCode)
+
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
+
                 callback.onError(error.message)
+
             }
+
         }
 
         database.child("rooms")
             .child(roomCode)
             .addValueEventListener(roomStateListener!!)
+
     }
 
 
@@ -435,6 +465,7 @@ class RoomManager(
                     return@addOnSuccessListener
                 }
 
+                android.util.Log.d("GAME_INIT", "Host verified")
                 callback.onHostShouldInitializeGame()
             }
 

@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.voxcom.tikitopple.adapter.LobbyAdapter
+import com.voxcom.tikitopple.manager.GameInitializationCallback
+import com.voxcom.tikitopple.manager.GameInitializer
 import com.voxcom.tikitopple.manager.RoomCallback
 import com.voxcom.tikitopple.manager.RoomManager
 import com.voxcom.tikitopple.model.LobbyPlayer
@@ -251,11 +253,24 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
     override fun onGameStarted(roomCode: String) {
 
+        android.util.Log.d("GAME_FLOW", "onGameStarted() called")
+
+        hideLoading()
+
         Toast.makeText(
             this,
-            "Game Starting...",
+            "Opening Game...",
             Toast.LENGTH_SHORT
         ).show()
+
+        startActivity(
+            android.content.Intent(
+                this,
+                MainActivity::class.java
+            )
+        )
+
+        finish()
 
     }
 
@@ -301,8 +316,35 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
     }
     override fun onHostShouldInitializeGame() {
-        android.util.Log.d("GAME_FLOW", "onHostShouldInitializeGame() called")
-        Toast.makeText(this, "Host callback", Toast.LENGTH_SHORT).show()
+
+        GameInitializer(
+            roomManager.getCurrentRoom()!!,
+            object : GameInitializationCallback {
+
+                override fun onStatusChanged(message: String) {
+                    updateLoading(message)
+                }
+
+                override fun onCompleted() {
+
+                    android.util.Log.d("GAME_FLOW", "GameInitializer completed")
+
+                    updateLoading("Waiting for players...")
+
+                }
+
+                override fun onError(message: String) {
+                    hideLoading()
+                    Toast.makeText(
+                        this@HomeActivity,
+                        message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            }
+        ).initializeGame()
+
     }
 
 }

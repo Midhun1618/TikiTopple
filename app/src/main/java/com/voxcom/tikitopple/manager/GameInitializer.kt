@@ -18,6 +18,8 @@ class GameInitializer(
 
     fun initializeGame() {
 
+        android.util.Log.d("GAME_INIT", "initializeGame()")
+
         callback.onStatusChanged("Creating Match")
 
         fetchPlayers()
@@ -34,6 +36,11 @@ class GameInitializer(
             .get()
             .addOnSuccessListener { snapshot ->
 
+                android.util.Log.d(
+                    "GAME_INIT",
+                    "Players fetched = ${snapshot.childrenCount}"
+                )
+
                 val players = mutableListOf<LobbyPlayer>()
 
                 snapshot.children.forEach {
@@ -46,7 +53,9 @@ class GameInitializer(
 
                 }
 
+                android.util.Log.d("GAME_INIT", "Assign Secret Cards")
                 assignSecretCards(players)
+
 
             }
             .addOnFailureListener {
@@ -91,6 +100,8 @@ class GameInitializer(
 
     ) {
 
+        android.util.Log.d("GAME_INIT", "Create Board")
+
         callback.onStatusChanged(
             "Creating Board..."
         )
@@ -117,6 +128,8 @@ class GameInitializer(
         board: List<Int>
 
     ) {
+
+        android.util.Log.d("GAME_INIT", "Generate Turn Order")
 
         callback.onStatusChanged(
             "Generating Turn Order..."
@@ -149,6 +162,8 @@ class GameInitializer(
         turnOrder: List<String>
 
     ) {
+
+        android.util.Log.d("GAME_INIT", "Deal Cards")
 
         callback.onStatusChanged(
             "Dealing Cards..."
@@ -192,6 +207,8 @@ class GameInitializer(
         players: Map<String,GamePlayer>
 
     ) {
+
+        android.util.Log.d("GAME_INIT", "saveGame()")
 
         callback.onStatusChanged(
             "Saving Game..."
