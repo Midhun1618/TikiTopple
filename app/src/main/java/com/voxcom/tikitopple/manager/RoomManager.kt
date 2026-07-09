@@ -26,14 +26,15 @@ class RoomManager(
         context.getSharedPreferences("tiki_topple", Context.MODE_PRIVATE)
 
     private val uid = auth.currentUser!!.uid
+    private var roomStateListener: ValueEventListener? = null
 
     companion object {
         private const val CURRENT_ROOM = "current_room"
     }
+    init {
+        currentRoomCode = prefs.getString(CURRENT_ROOM, null)
+    }
 
-    // ==========================================================
-    // HOST
-    // ==========================================================
 
     fun createRoom() {
         generateUniqueRoomCode()
@@ -71,8 +72,14 @@ class RoomManager(
 
     }
 
-    fun getHostedRoom(): String? {
-        return prefs.getString(CURRENT_ROOM, null)
+    fun getCurrentRoom(): String? {
+
+        if (currentRoomCode == null) {
+            currentRoomCode = prefs.getString(CURRENT_ROOM, null)
+        }
+
+        return currentRoomCode
+
     }
 
     private fun createRoomInDatabase(roomCode: String) {
@@ -84,6 +91,8 @@ class RoomManager(
             hostUid = uid,
 
             state = RoomState.WAITING.name,
+
+            initialized = false,
 
             createdAt = System.currentTimeMillis()
 
@@ -148,12 +157,51 @@ class RoomManager(
 
     }
 
-    // ==========================================================
-    // JOIN
-    // ==========================================================
-
     fun joinRoom(roomCode: String) {
         validateRoom(roomCode)
+    }
+    fun listenRoomState() {
+
+        val roomCode = currentRoomCode ?: return
+
+        roomStateListener?.let {
+            database.child("rooms")
+                .child(roomCode)
+                .removeEventListener(it)
+        }
+
+        roomStateListener = object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val room = snapshot.getValue(Room::class.java)
+                    ?: return
+
+                if (
+                    room.state == RoomState.PLAYING.name &&
+                    room.initialized
+                ) {
+
+                    roomStateListener?.let {
+                        database.child("rooms")
+                            .child(roomCode)
+                            .removeEventListener(it)
+                    }
+
+                    roomStateListener = null
+
+                    callback.onGameStarted(room.roomCode)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback.onError(error.message)
+            }
+        }
+
+        database.child("rooms")
+            .child(roomCode)
+            .addValueEventListener(roomStateListener!!)
     }
 
 
@@ -176,7 +224,7 @@ class RoomManager(
                             return@addOnSuccessListener
                         }
 
-                if (room.state != "WAITING") {
+                if(room.state != RoomState.WAITING.name){
                     callback.onError("Game already started.")
                     return@addOnSuccessListener
                 }
@@ -189,7 +237,11 @@ class RoomManager(
                 }
 
                 if (playersSnapshot.hasChild(uid)) {
+
+                    saveCurrentRoom(roomCode)
+
                     callback.onRoomJoined(roomCode)
+
                     return@addOnSuccessListener
                 }
 
@@ -216,6 +268,8 @@ class RoomManager(
                             .child(uid)
                             .setValue(player)
                             .addOnSuccessListener {
+
+                                saveCurrentRoom(roomCode)
 
                                 callback.onRoomJoined(roomCode)
 
@@ -259,7 +313,8 @@ class RoomManager(
 
     }
 
-    fun listenLobby(roomCode: String) {
+    fun listenLobby() {
+        val roomCode = currentRoomCode ?: return
 
         database.child("rooms")
             .child(roomCode)
@@ -310,11 +365,53 @@ class RoomManager(
 
     }
 
-    fun leaveRoom(roomCode: String) {
+    fun leaveRoom() {
+
+        val roomCode = currentRoomCode ?: return
+
+        database.child("rooms")
+            .child(roomCode)
+            .child("players")
+            .child(uid)
+            .removeValue()
+            .addOnSuccessListener {
+
+                currentRoomCode = null
+
+                prefs.edit()
+                    .remove(CURRENT_ROOM)
+                    .apply()
+
+            }
+            .addOnFailureListener {
+
+                callback.onError("Unable to leave room.")
+
+            }
 
     }
 
-    private fun deleteRoom(roomCode: String) {
+    private fun deleteRoom() {
+
+        val roomCode = currentRoomCode ?: return
+
+        database.child("rooms")
+            .child(roomCode)
+            .removeValue()
+            .addOnSuccessListener {
+
+                currentRoomCode = null
+
+                prefs.edit()
+                    .remove(CURRENT_ROOM)
+                    .apply()
+
+            }
+            .addOnFailureListener {
+
+                callback.onError("Unable to delete room.")
+
+            }
 
     }
 
@@ -338,11 +435,7 @@ class RoomManager(
                     return@addOnSuccessListener
                 }
 
-                // TODO:
-                // assign secret cards
-                // initialize board
-                // create turn order
-                // state = PLAYING
+                callback.onHostShouldInitializeGame()
             }
 
     }

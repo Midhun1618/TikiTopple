@@ -29,6 +29,7 @@ interface RoomCallback {
         totalPlayers: Int,
         allReady: Boolean
     )
+    fun onHostShouldInitializeGame()
     /**
      * Called whenever an operation fails.
      */

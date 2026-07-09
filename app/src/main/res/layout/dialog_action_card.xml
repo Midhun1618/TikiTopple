@@ -25,19 +25,19 @@
             android:id="@+id/card1"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/t1"
+            android:src="@drawable/a_1"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card2"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/t2"
+            android:src="@drawable/a_2"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card3"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/t3"
+            android:src="@drawable/a_3"
             android:layout_margin="6dp"/>
     </LinearLayout>
     <LinearLayout
@@ -49,13 +49,19 @@
             android:id="@+id/card4"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/t4"
+            android:src="@drawable/a_t"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card5"
             android:layout_width="80dp"
             android:layout_height="100dp"
-            android:src="@drawable/t5"
+            android:src="@drawable/a_t"
+            android:layout_margin="6dp"/>
+        <ImageView
+            android:id="@+id/card6"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:src="@drawable/a_x"
             android:layout_margin="6dp"/>
     </LinearLayout>
 

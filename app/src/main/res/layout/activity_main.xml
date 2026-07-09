@@ -60,7 +60,7 @@
                 android:id="@+id/actionCardBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/t5"
+                android:src="@drawable/action_card_btn"
                 android:layout_margin="14dp"/>
         </LinearLayout>
         <LinearLayout
@@ -75,7 +75,7 @@
                 android:id="@+id/secretCardBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/t8"
+                android:src="@drawable/secret_card_btn"
                 android:layout_margin="14dp"/>
         </LinearLayout>
 

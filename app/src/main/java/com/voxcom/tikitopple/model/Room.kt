@@ -8,6 +8,8 @@ data class Room(
 
     val state: String = "WAITING",
 
+    val initialized: Boolean = false,
+
     val createdAt: Long = 0L
 
 )

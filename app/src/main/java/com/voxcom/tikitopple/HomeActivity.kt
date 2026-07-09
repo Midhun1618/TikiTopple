@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -38,6 +39,9 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
     private lateinit var readyBtn: Button
 
     private lateinit var adapter: LobbyAdapter
+
+    private lateinit var loadingOverlay: ConstraintLayout
+    private lateinit var loadingStatusTv: TextView
 
     private lateinit var roomManager: RoomManager
 
@@ -103,6 +107,9 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
         readyBtn = findViewById(R.id.readyBtn)
 
+        loadingOverlay = findViewById(R.id.loadingOverlay)
+        loadingStatusTv = findViewById(R.id.loadingStatusTv)
+
         adapter = LobbyAdapter(
             this,
             mutableListOf()
@@ -117,6 +124,9 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
         hostBtn.setOnClickListener {
 
             roomManager.createRoom()
+            hostLL.visibility = View.VISIBLE
+            joinLL.visibility = View.GONE
+            lobbyList.visibility = View.VISIBLE
 
         }
         readyBtn.setOnClickListener {
@@ -135,6 +145,7 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
         joinBtn.setOnClickListener {
 
+            lobbyList.visibility = View.VISIBLE
             hostLL.visibility = View.GONE
             joinLL.visibility = View.VISIBLE
 
@@ -211,7 +222,8 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
         roomCodeTv.text = roomCode
 
-        roomManager.listenLobby(roomCode)
+        roomManager.listenLobby()
+        roomManager.listenRoomState()
 
     }
 
@@ -226,7 +238,8 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
         hostBtn.visibility = View.GONE
         joinBtn.visibility = View.GONE
 
-        roomManager.listenLobby(roomCode)
+        roomManager.listenLobby()
+        roomManager.listenRoomState()
 
     }
 
@@ -261,10 +274,35 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
         allReady: Boolean
     ) {
 
-        if(allReady){
-            roomManager.beginGame()
-        }
+        if (!allReady)
+            return
 
+        showLoading()
+
+        updateLoading("Waiting for host...")
+
+        roomManager.beginGame()
+    }
+    private fun showLoading() {
+
+        loadingOverlay.visibility = View.VISIBLE
+
+    }
+
+    private fun hideLoading() {
+
+        loadingOverlay.visibility = View.GONE
+
+    }
+
+    private fun updateLoading(message: String) {
+
+        loadingStatusTv.text = message
+
+    }
+    override fun onHostShouldInitializeGame() {
+        android.util.Log.d("GAME_FLOW", "onHostShouldInitializeGame() called")
+        Toast.makeText(this, "Host callback", Toast.LENGTH_SHORT).show()
     }
 
 }
