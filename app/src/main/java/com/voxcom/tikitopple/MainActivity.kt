@@ -1009,13 +1009,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val newIndex = oldIndex - 1
-
         val above = boardOrder[newIndex]
 
-        val moveRight = ObjectAnimator.ofFloat(
+        val moveLeft = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            sideOffset
+            0f
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1036,10 +1035,10 @@ class MainActivity : AppCompatActivity() {
             duration = ANIMATION_DURATION
         }
 
-        val moveLeft = ObjectAnimator.ofFloat(
+        val moveRight = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            0f
+            sideOffset
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1047,26 +1046,20 @@ class MainActivity : AppCompatActivity() {
         AnimatorSet().apply {
 
             playSequentially(
-                moveRight,
+                moveLeft,
                 moveAboveDown,
                 moveSelectedUp,
-                moveLeft
+                moveRight
             )
 
             addListener(object : AnimatorListenerAdapter() {
-
                 override fun onAnimationEnd(animation: Animator) {
-
                     onFinished()
-
                 }
-
             })
 
             start()
-
         }
-
     }
     private fun tikiUp2(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
@@ -1082,10 +1075,10 @@ class MainActivity : AppCompatActivity() {
         val first = boardOrder[targetIndex]
         val second = boardOrder[targetIndex + 1]
 
-        val moveRight = ObjectAnimator.ofFloat(
+        val moveLeft = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            sideOffset
+            0f
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1114,10 +1107,10 @@ class MainActivity : AppCompatActivity() {
             duration = ANIMATION_DURATION
         }
 
-        val moveLeft = ObjectAnimator.ofFloat(
+        val moveRight = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            0f
+            sideOffset
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1125,7 +1118,7 @@ class MainActivity : AppCompatActivity() {
         AnimatorSet().apply {
 
             playSequentially(
-                moveRight,
+                moveLeft,
                 AnimatorSet().apply {
                     playTogether(
                         moveFirstDown,
@@ -1133,7 +1126,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 },
                 moveSelectedUp,
-                moveLeft
+                moveRight
             )
 
             addListener(object : AnimatorListenerAdapter() {
@@ -1151,6 +1144,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     private fun tikiUp3(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
         val oldIndex = oldBoard.indexOf(selected.id)
@@ -1166,10 +1160,10 @@ class MainActivity : AppCompatActivity() {
         val second = boardOrder[targetIndex + 1]
         val third = boardOrder[targetIndex + 2]
 
-        val moveRight = ObjectAnimator.ofFloat(
+        val moveLeft = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            sideOffset
+            0f
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1206,10 +1200,10 @@ class MainActivity : AppCompatActivity() {
             duration = ANIMATION_DURATION
         }
 
-        val moveLeft = ObjectAnimator.ofFloat(
+        val moveRight = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            0f
+            sideOffset
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1217,7 +1211,7 @@ class MainActivity : AppCompatActivity() {
         AnimatorSet().apply {
 
             playSequentially(
-                moveRight,
+                moveLeft,
                 AnimatorSet().apply {
                     playTogether(
                         moveFirstDown,
@@ -1226,7 +1220,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 },
                 moveSelectedUp,
-                moveLeft
+                moveRight
             )
 
             addListener(object : AnimatorListenerAdapter() {
@@ -1254,10 +1248,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val moveRight = ObjectAnimator.ofFloat(
+        val moveLeft = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            sideOffset
+            0f
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1290,10 +1284,10 @@ class MainActivity : AppCompatActivity() {
             duration = ANIMATION_DURATION
         }
 
-        val moveLeft = ObjectAnimator.ofFloat(
+        val moveRight = ObjectAnimator.ofFloat(
             selected.view,
             View.TRANSLATION_X,
-            0f
+            sideOffset
         ).apply {
             duration = ANIMATION_DURATION
         }
@@ -1301,10 +1295,10 @@ class MainActivity : AppCompatActivity() {
         AnimatorSet().apply {
 
             playSequentially(
-                moveRight,
+                moveLeft,
                 moveOthers,
                 moveSelectedDown,
-                moveLeft
+                moveRight
             )
 
             addListener(object : AnimatorListenerAdapter() {
@@ -1322,7 +1316,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
     private fun tikiToss(selected: Tiki, onFinished: () -> Unit) {
 
         val frames = getToastFrames(selected.id)
