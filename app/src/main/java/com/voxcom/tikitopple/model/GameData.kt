@@ -12,6 +12,10 @@ data class GameData(
 
     val players: Map<String, GamePlayer> = emptyMap(),
 
-    val lastMove: LastMove = LastMove()
+    val lastMove: LastMove = LastMove(),
+
+    val gamePhase: String = GamePhase.MOVE,
+
+    val roundScores: Map<String, Int> = emptyMap()
 
 )

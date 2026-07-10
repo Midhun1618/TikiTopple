@@ -18,10 +18,6 @@ object ActionCardManager {
 
     )
 
-    /**
-     * Every player receives the exact same cards
-     * at the beginning of every round.
-     */
     fun deal(): List<String> {
 
         return defaultHand.map { it.id }

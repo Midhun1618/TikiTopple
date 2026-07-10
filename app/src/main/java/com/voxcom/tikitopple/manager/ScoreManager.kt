@@ -1,13 +1,6 @@
 package com.voxcom.tikitopple.manager
 
 object ScoreManager {
-
-    /**
-     * Calculates the score of a player for one round.
-     *
-     * secretTargets -> SecretCardManager.getTargets("S13")
-     * board -> Current board after all moves
-     */
     fun calculateScore(
 
         secretTargets: List<Int>,

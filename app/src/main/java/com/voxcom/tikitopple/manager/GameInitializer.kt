@@ -2,7 +2,9 @@ package com.voxcom.tikitopple.manager
 
 import com.google.firebase.database.FirebaseDatabase
 import com.voxcom.tikitopple.model.GameData
+import com.voxcom.tikitopple.model.GamePhase
 import com.voxcom.tikitopple.model.GamePlayer
+import com.voxcom.tikitopple.model.LastMove
 import com.voxcom.tikitopple.model.LobbyPlayer
 import com.voxcom.tikitopple.model.RoomState
 
@@ -178,6 +180,8 @@ class GameInitializer(
 
                 uid = it.uid,
 
+                name = it.name,
+
                 score = 0,
 
                 secretCard = assignments[it.uid]!!,
@@ -211,7 +215,7 @@ class GameInitializer(
         android.util.Log.d("GAME_INIT", "saveGame()")
 
         callback.onStatusChanged(
-            "Saving Game..."
+            "Saving Game"
         )
 
         val game = GameData(
@@ -224,7 +228,11 @@ class GameInitializer(
 
             turnOrder = turnOrder,
 
-            players = players
+            players = players,
+
+            lastMove = LastMove(),
+
+            gamePhase = GamePhase.MOVE
 
         )
 

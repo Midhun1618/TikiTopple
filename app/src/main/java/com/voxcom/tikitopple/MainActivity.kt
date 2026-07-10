@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -16,6 +17,7 @@ import android.widget.Toast
 
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -24,17 +26,20 @@ import com.google.firebase.database.*
 
 import com.voxcom.tikitopple.manager.*
 import com.voxcom.tikitopple.model.GameData
+import com.voxcom.tikitopple.model.GamePhase
 
 class MainActivity : AppCompatActivity() {
-
-    // NOTE: createTikis(), calculateBoardMetrics(), createViews(), getYForIndex(),
-    // updateArrayText(), and showSecretCardDialog() were NOT included in the source
-    // file you pasted. Their call sites below are preserved exactly as they were;
-    // keep your existing implementations for them unchanged. None of the multiplayer
-    // sync / animation fixes in this refactor depend on their internals.
-
     private lateinit var board: FrameLayout
     private lateinit var arrayText: TextView
+
+
+    private lateinit var playerPanels: List<ConstraintLayout>
+
+    private lateinit var playerScores: List<TextView>
+
+    private val activeColor = Color.parseColor("#4CAF50")
+
+    private val inactiveColor = Color.parseColor("#616161")
 
     data class Tiki(
         val id: Int,
@@ -76,13 +81,26 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedCard: String? = null
     private var selectedTiki: Tiki? = null
-
-    // True while a board animation is actively playing.
     private var isAnimating = false
-
-    // If a Firebase board update arrives while we're mid-animation, it's stashed
-    // here and processed as soon as the current animation completes.
     private var pendingGameForBoard: GameData? = null
+
+    private lateinit var roundOverlay: View
+
+    private lateinit var roundTitleTv: TextView
+
+    private lateinit var roundScoreTv: TextView
+
+    private lateinit var roundStatusTv: TextView
+
+
+    private lateinit var winnerOverlay: ConstraintLayout
+
+    private lateinit var winnerTitle: TextView
+    private lateinit var winnerScore: TextView
+    private lateinit var winnerLeaderboard: TextView
+
+    private lateinit var playAgainBtn: Button
+    private lateinit var homeBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,6 +165,37 @@ class MainActivity : AppCompatActivity() {
         actionCardBtn = findViewById(R.id.actionCardBtn)
         secretCardBtn = findViewById(R.id.secretCardBtn)
 
+        playerPanels = listOf(
+            findViewById(R.id.player1),
+            findViewById(R.id.player2),
+            findViewById(R.id.player3),
+            findViewById(R.id.player4)
+        )
+
+        playerScores = listOf(
+            findViewById(R.id.player1Score),
+            findViewById(R.id.player2Score),
+            findViewById(R.id.player3Score),
+            findViewById(R.id.player4Score)
+        )
+
+        roundOverlay = findViewById(R.id.roundOverlay)
+
+        roundTitleTv = findViewById(R.id.roundTitleTv)
+
+        roundScoreTv = findViewById(R.id.roundScoreTv)
+
+        roundStatusTv = findViewById(R.id.roundStatusTv)
+
+        winnerOverlay = findViewById(R.id.winnerOverlay)
+
+        winnerTitle = findViewById(R.id.winnerTitle)
+        winnerScore = findViewById(R.id.winnerScore)
+        winnerLeaderboard = findViewById(R.id.winnerLeaderboard)
+
+        playAgainBtn = findViewById(R.id.playAgainBtn)
+        homeBtn = findViewById(R.id.homeBtn)
+
         createTikis()
 
         board.post {
@@ -154,6 +203,17 @@ class MainActivity : AppCompatActivity() {
             calculateBoardMetrics()
 
             createViews()
+
+        }
+        playAgainBtn.setOnClickListener {
+
+            finish()
+
+        }
+
+        homeBtn.setOnClickListener {
+
+            finish()
 
         }
 
@@ -185,19 +245,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setEnabled(enabled: Boolean) {
-
-        boardOrder.forEach {
-
-            it.view.isEnabled = enabled
-
-            it.view.alpha =
-                if (enabled) 1f else 0.5f
-
-        }
-
-    }
-
     private fun listenGame() {
 
         database.child("rooms")
@@ -212,21 +259,7 @@ class MainActivity : AppCompatActivity() {
                             ?: return
 
                     gameData = game
-
-                    // -----------------------------
-                    // Update Turn (independent of board animation state)
-                    // -----------------------------
-
-                    val myTurn =
-                        game.currentTurn == uid
-
-                    if (!isAnimating) {
-                        setEnabled(myTurn)
-                    }
-
-                    // -----------------------------
-                    // Update Secret Card Button
-                    // -----------------------------
+                    updatePlayerPanels()
 
                     val me = game.players[uid]
 
@@ -240,15 +273,56 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-                    // -----------------------------
-                    // Update Action Card Button
-                    // -----------------------------
-
                     updateActionCards()
+                    when (game.gamePhase) {
 
-                    // -----------------------------
-                    // Check Winner
-                    // -----------------------------
+                        GamePhase.GAME_OVER -> {
+
+                            showWinner()
+
+                        }
+
+                        GamePhase.ROUND_RESULTS -> {
+
+                            showRoundResults()
+
+                            database.child("rooms")
+                                .child(roomCode)
+                                .child("hostUid")
+                                .get()
+                                .addOnSuccessListener {
+
+                                    val hostUid =
+                                        it.getValue(String::class.java)
+                                            ?: return@addOnSuccessListener
+
+                                    if (hostUid != uid)
+                                        return@addOnSuccessListener
+
+                                    roundOverlay.postDelayed({
+
+                                        val currentGame = gameData ?: return@postDelayed
+
+                                        if (currentGame.gamePhase != GamePhase.ROUND_RESULTS)
+                                            return@postDelayed
+
+                                        RoundManager(roomCode)
+                                            .startNextRound(currentGame)
+
+                                    },3000)
+
+                                }
+
+                        }
+
+                        GamePhase.MOVE -> {
+
+                            hideRoundOverlay()
+                            hideWinnerOverlay()
+
+                        }
+
+                    }
 
                     if (game.round > 3) {
 
@@ -260,9 +334,6 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-                    // -----------------------------
-                    // Sync Board (queued if an animation is already playing)
-                    // -----------------------------
 
                     handleBoardUpdate(game)
 
@@ -281,6 +352,50 @@ class MainActivity : AppCompatActivity() {
             })
     }
 
+    private fun updatePlayerPanels() {
+
+        val game = gameData ?: return
+
+        val order = game.turnOrder
+
+        playerPanels.forEachIndexed { index, panel ->
+
+            if (index >= order.size) {
+
+                panel.visibility = View.GONE
+
+                return@forEachIndexed
+
+            }
+
+            panel.visibility = View.VISIBLE
+
+            val uid = order[index]
+
+            val player = game.players[uid] ?: return@forEachIndexed
+
+            playerScores[index].text = player.score.toString()
+
+            panel.setBackgroundColor(
+
+                if (uid == game.currentTurn)
+                    activeColor
+                else
+                    inactiveColor
+
+            )
+
+        }
+
+        val myTurn = game.currentTurn == uid
+
+        actionCardBtn.alpha =
+            if (myTurn) 1f else 0.4f
+
+        actionCardBtn.isEnabled = myTurn
+
+    }
+
     private fun updateActionCards() {
 
         val game = gameData ?: return
@@ -296,10 +411,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-    // ---------------------------------------------------------------------
-    // Board synchronization
-    // ---------------------------------------------------------------------
 
     private fun handleBoardUpdate(game: GameData) {
 
@@ -330,31 +441,177 @@ class MainActivity : AppCompatActivity() {
 
         isAnimating = true
 
-        setEnabled(false)
-
         animateMove(oldBoard, newBoard, game) {
 
             applyBoardImmediate(newBoard)
 
             isAnimating = false
 
-            val stillMyTurn = gameData?.currentTurn == uid
-
-            setEnabled(stillMyTurn)
+            checkRoundFinished()
 
             val next = pendingGameForBoard
 
             pendingGameForBoard = null
 
             if (next != null) {
+
                 processBoardUpdate(next)
+
             }
 
         }
 
     }
 
+    private fun checkRoundFinished() {
+
+        val game = gameData ?: return
+
+        if (game.gamePhase != GamePhase.MOVE)
+            return
+
+        val allFinished = game.players.values.all {
+
+            !ActionCardManager.hasCards(it.cards)
+
+        }
+
+        if (!allFinished)
+            return
+
+        val roomRef =
+            database.child("rooms").child(roomCode)
+
+        roomRef.child("hostUid")
+            .get()
+            .addOnSuccessListener {
+
+                val hostUid =
+                    it.getValue(String::class.java)
+                        ?: return@addOnSuccessListener
+
+                if (uid != hostUid)
+                    return@addOnSuccessListener
+
+                onRoundFinished()
+
+            }
+
+    }
+    private fun onRoundFinished() {
+
+        val game = gameData ?: return
+
+        val playerSecrets =
+            game.players.mapValues {
+
+                it.value.secretCard
+
+            }
+
+        val roundScores =
+            ScoreManager.calculateAllScores(
+
+                playerSecrets,
+
+                game.board
+
+            )
+
+        val updates = hashMapOf<String, Any>()
+
+        roundScores.forEach { (playerUid, score) ->
+
+            val current =
+                game.players[playerUid]?.score ?: 0
+
+            updates[
+                "rooms/$roomCode/game/players/$playerUid/score"
+            ] = current + score
+
+        }
+
+        updates["rooms/$roomCode/game/roundScores"] =
+            roundScores
+
+        updates["rooms/$roomCode/game/gamePhase"] =
+            GamePhase.ROUND_RESULTS
+
+        database.updateChildren(updates)
+
+        tikis.forEach { tiki ->
+
+            tiki.view.visibility = View.VISIBLE
+            tiki.view.setImageResource(tiki.imageRes)
+
+        }
+
+    }
+
+    private fun showRoundResults() {
+
+        val game = gameData ?: return
+
+        roundTitleTv.text = "ROUND ${game.round} COMPLETE"
+
+        val builder = StringBuilder()
+
+        val sortedPlayers =
+            game.players.values.sortedByDescending { it.score }
+
+        sortedPlayers.forEachIndexed { index, player ->
+
+            val roundScore =
+                game.roundScores[player.uid] ?: 0
+
+            val medal = when(index) {
+                0 -> "🥇 "
+                1 -> "🥈 "
+                2 -> "🥉 "
+                else -> ""
+            }
+
+            builder.append(
+                medal +
+                        player.name +
+                        "\n" +
+                        "+$roundScore    Total : ${player.score}\n\n"
+            )
+
+        }
+
+        roundScoreTv.text = builder.toString()
+
+        roundStatusTv.text = "Preparing next round..."
+
+        roundOverlay.alpha = 0f
+        roundOverlay.visibility = View.VISIBLE
+
+        roundOverlay.animate()
+            .alpha(1f)
+            .setDuration(250)
+            .start()
+
+    }
+
+    private fun hideRoundOverlay() {
+
+        roundOverlay.animate()
+            .alpha(0f)
+            .setDuration(250)
+            .withEndAction {
+
+                roundOverlay.visibility = View.GONE
+
+                roundOverlay.alpha = 1f
+
+            }
+            .start()
+
+    }
+
     private fun applyBoardImmediate(newBoard: List<Int>) {
+
 
         val newOrder = newBoard.map { id -> tikis.first { it.id == id } }
 
@@ -369,35 +626,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshBoard() {
 
-        // Any tiki no longer present in boardOrder (e.g. tossed) gets its view
-        // pulled off the board.
-        val presentIds = boardOrder.map { it.id }.toSet()
-
-        tikis.forEach { tiki ->
-
-            if (tiki.id !in presentIds && tiki.view.parent != null) {
-
-                board.removeView(tiki.view)
-
-            }
-
-        }
-
         boardOrder.forEachIndexed { index, tiki ->
 
             tiki.view.animate()
-                .translationX(0f)
+                .translationX(sideOffset)
                 .translationY(getYForIndex(index))
                 .setDuration(ANIMATION_DURATION)
                 .start()
 
         }
 
-    }
+        updateArrayText()
 
-    // ---------------------------------------------------------------------
-    // Central animation dispatcher
-    // ---------------------------------------------------------------------
+    }
 
     private fun animateMove(
         oldBoard: List<Int>,
@@ -439,9 +680,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // ---------------------------------------------------------------------
-    // Turn handling — no game rules here, only Firebase orchestration
-    // ---------------------------------------------------------------------
 
     private fun playTurn() {
 
@@ -537,22 +775,39 @@ class MainActivity : AppCompatActivity() {
     }
     private fun calculateBoardMetrics() {
 
-        tikiWidth = (board.width * 0.45f).toInt()
+        val usableWidth =
+            board.width -
+                    board.paddingLeft -
+                    board.paddingRight
 
-        val sample = resources.getDrawable(
-            tikis.first().imageRes,
-            theme
-        )
+        val usableHeight =
+            board.height -
+                    board.paddingTop -
+                    board.paddingBottom
 
-        val ratio =
-            sample.intrinsicHeight.toFloat() /
-                    sample.intrinsicWidth.toFloat()
+        val maxHeightPerTiki = usableHeight / 9
 
-        tikiHeight = (tikiWidth * ratio).toInt()
+        val maxWidthPerTiki = (usableWidth * 0.75f).toInt()
 
-        blockSpacing = tikiHeight * 0.55f
+        val widthFromHeight =
+            (maxHeightPerTiki * 1.5f).toInt()
 
-        sideOffset = board.width * 0.28f
+        if (widthFromHeight <= maxWidthPerTiki) {
+
+            tikiHeight = maxHeightPerTiki
+            tikiWidth = widthFromHeight
+
+        } else {
+
+            tikiWidth = maxWidthPerTiki
+            tikiHeight = (tikiWidth / 1.5f).toInt()
+
+        }
+
+        blockSpacing = tikiHeight.toFloat()
+
+        sideOffset =
+            ((usableWidth - tikiWidth) / 2f)
 
     }
     private fun createTikis() {
@@ -572,9 +827,8 @@ class MainActivity : AppCompatActivity() {
     }
     private fun getYForIndex(index: Int): Float {
 
-        val bottomY = board.height - tikiHeight.toFloat()
-
-        return bottomY - ((boardOrder.size - 1 - index) * blockSpacing)
+        return board.paddingTop +
+                index * blockSpacing
 
     }
     private fun updateArrayText() {
@@ -626,20 +880,27 @@ class MainActivity : AppCompatActivity() {
 
             image.setImageResource(tiki.imageRes)
 
-            image.layoutParams = FrameLayout.LayoutParams(
+            val params = FrameLayout.LayoutParams(
                 tikiWidth,
                 tikiHeight
-            ).apply {
-                gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            }
+            )
+
+            params.gravity = Gravity.TOP or Gravity.START
+
+            image.layoutParams = params
+
+            image.translationX = sideOffset
 
             image.translationY = getYForIndex(index)
-
-            image.translationX = 0f
 
             image.setOnClickListener {
 
                 if (isAnimating)
+                    return@setOnClickListener
+
+                val game = gameData ?: return@setOnClickListener
+
+                if (game.currentTurn != uid)
                     return@setOnClickListener
 
                 if (selectedCard == null) {
@@ -675,6 +936,18 @@ class MainActivity : AppCompatActivity() {
     private fun showActionCardDialog() {
 
         val game = gameData ?: return
+
+        if (game.currentTurn != uid) {
+
+            Toast.makeText(
+                this,
+                "Wait for your turn.",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return
+
+        }
 
         val me = game.players[uid] ?: return
 
@@ -738,17 +1011,6 @@ class MainActivity : AppCompatActivity() {
         )
 
     }
-
-    // ---------------------------------------------------------------------
-    // Animations
-    //
-    // These only move views and report completion via onFinished().
-    // None of them mutate boardOrder — the dispatcher's caller
-    // (processBoardUpdate) does that once, after the animation ends.
-    // "oldBoard" is passed in explicitly for index lookups; boardOrder
-    // itself still mirrors oldBoard at this point since it hasn't been
-    // replaced yet.
-    // ---------------------------------------------------------------------
 
     private fun tikiUp1(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
@@ -1103,10 +1365,16 @@ class MainActivity : AppCompatActivity() {
             selected.view.setImageResource(frames[3])
         }, frameDuration * 4)
 
-        // View removal is handled centrally by refreshBoard() once
-        // boardOrder is updated to the post-toss board — not here.
         selected.view.postDelayed({
+
+            // Restore original tiki image
+            selected.view.setImageResource(selected.imageRes)
+
+            // Hide the toasted tiki
+            selected.view.visibility = View.INVISIBLE
+
             onFinished()
+
         }, frameDuration * 5)
 
     }
@@ -1181,5 +1449,50 @@ class MainActivity : AppCompatActivity() {
             else -> emptyList()
 
         }
+    }
+
+    private fun showWinner() {
+
+        val game = gameData ?: return
+
+        winnerOverlay.visibility = View.VISIBLE
+
+        val ranking =
+            game.players.values
+                .sortedByDescending { it.score }
+
+        val winner = ranking.first()
+
+        winnerTitle.text = winner.name
+
+        winnerScore.text = "${winner.score} Points"
+
+        val leaderboard = StringBuilder()
+
+        ranking.forEachIndexed { index, player ->
+
+            leaderboard.append(
+                "${index + 1}. ${player.name}    ${player.score}"
+            )
+
+            if (index != ranking.lastIndex)
+                leaderboard.append("\n")
+
+        }
+
+        winnerLeaderboard.text = leaderboard.toString()
+
+        actionCardBtn.isEnabled = false
+        secretCardBtn.isEnabled = false
+
+    }
+
+    private fun hideWinnerOverlay() {
+
+        winnerOverlay.visibility = View.GONE
+
+        actionCardBtn.isEnabled = true
+        secretCardBtn.isEnabled = true
+
     }
 }
