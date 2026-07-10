@@ -285,6 +285,8 @@ class MainActivity : AppCompatActivity() {
                         GamePhase.ROUND_RESULTS -> {
 
                             showRoundResults()
+                            tossedTikiIds.clear()
+                            restoreAllTikis()
 
                             database.child("rooms")
                                 .child(roomCode)
@@ -539,13 +541,6 @@ class MainActivity : AppCompatActivity() {
 
         database.updateChildren(updates)
 
-        tikis.forEach { tiki ->
-
-            tiki.view.visibility = View.VISIBLE
-            tiki.view.setImageResource(tiki.imageRes)
-
-        }
-
     }
 
     private fun showRoundResults() {
@@ -610,34 +605,28 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private val tossedTikiIds = mutableSetOf<Int>()
+
     private fun applyBoardImmediate(newBoard: List<Int>) {
-
-
         val newOrder = newBoard.map { id -> tikis.first { it.id == id } }
-
         boardOrder.clear()
         boardOrder.addAll(newOrder)
-
         refreshBoard()
-
         updateArrayText()
-
     }
 
     private fun refreshBoard() {
-
         boardOrder.forEachIndexed { index, tiki ->
+            tiki.view.visibility =
+                if (tiki.id in tossedTikiIds) View.INVISIBLE else View.VISIBLE
 
             tiki.view.animate()
                 .translationX(sideOffset)
                 .translationY(getYForIndex(index))
                 .setDuration(ANIMATION_DURATION)
                 .start()
-
         }
-
         updateArrayText()
-
     }
 
     private fun animateMove(
@@ -932,7 +921,6 @@ class MainActivity : AppCompatActivity() {
         updateArrayText()
 
     }
-
     private fun showActionCardDialog() {
 
         val game = gameData ?: return
@@ -1011,7 +999,6 @@ class MainActivity : AppCompatActivity() {
         )
 
     }
-
     private fun tikiUp1(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
         val oldIndex = oldBoard.indexOf(selected.id)
@@ -1081,7 +1068,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
     private fun tikiUp2(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
         val oldIndex = oldBoard.indexOf(selected.id)
@@ -1165,7 +1151,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
     private fun tikiUp3(selected: Tiki, oldBoard: List<Int>, onFinished: () -> Unit) {
 
         val oldIndex = oldBoard.indexOf(selected.id)
@@ -1341,6 +1326,7 @@ class MainActivity : AppCompatActivity() {
     private fun tikiToss(selected: Tiki, onFinished: () -> Unit) {
 
         val frames = getToastFrames(selected.id)
+        tossedTikiIds.add(selected.id)
 
         if (frames.isEmpty()) {
             onFinished()
@@ -1493,6 +1479,17 @@ class MainActivity : AppCompatActivity() {
 
         actionCardBtn.isEnabled = true
         secretCardBtn.isEnabled = true
+
+    }
+
+    private fun restoreAllTikis() {
+
+        tikis.forEach {
+
+            it.view.visibility = View.VISIBLE
+            it.view.setImageResource(it.imageRes)
+
+        }
 
     }
 }
