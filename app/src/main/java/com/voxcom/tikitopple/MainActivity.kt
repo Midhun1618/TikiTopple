@@ -204,6 +204,8 @@ class MainActivity : AppCompatActivity() {
 
             createViews()
 
+            gameData?.let { handleBoardUpdate(it) }
+
         }
         playAgainBtn.setOnClickListener {
 
