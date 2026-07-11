@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val tikis = mutableListOf<Tiki>()
+    private val tossedTikiIds = mutableSetOf<Int>()
 
     // boardOrder always reflects what is CURRENTLY ON SCREEN.
     // It is only ever replaced AFTER an animation finishes.
@@ -606,9 +607,6 @@ class MainActivity : AppCompatActivity() {
             .start()
 
     }
-
-    private val tossedTikiIds = mutableSetOf<Int>()
-
     private fun applyBoardImmediate(newBoard: List<Int>) {
         val newOrder = newBoard.map { id -> tikis.first { it.id == id } }
         boardOrder.clear()
@@ -616,7 +614,6 @@ class MainActivity : AppCompatActivity() {
         refreshBoard()
         updateArrayText()
     }
-
     private fun refreshBoard() {
         boardOrder.forEachIndexed { index, tiki ->
             tiki.view.visibility =
@@ -630,7 +627,6 @@ class MainActivity : AppCompatActivity() {
         }
         updateArrayText()
     }
-
     private fun animateMove(
         oldBoard: List<Int>,
         newBoard: List<Int>,
@@ -670,8 +666,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
     private fun playTurn() {
 
         val game = gameData ?: return
@@ -818,9 +812,11 @@ class MainActivity : AppCompatActivity() {
     }
     private fun getYForIndex(index: Int): Float {
 
-        return board.paddingTop +
-                index * blockSpacing
+        val totalSlots = tikis.size
+        val visibleCount = boardOrder.size
+        val emptySlotsAbove = totalSlots - visibleCount
 
+        return board.paddingTop + (emptySlotsAbove + index) * blockSpacing
     }
     private fun updateArrayText() {
 
