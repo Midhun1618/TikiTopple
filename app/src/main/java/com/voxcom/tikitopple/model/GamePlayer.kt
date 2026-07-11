@@ -10,6 +10,8 @@ data class GamePlayer(
 
     val secretCard: String = "",
 
-    val cards: List<String> = emptyList()
+    val cards: List<String> = emptyList(),
+
+    val avatarIndex: Int = 0
 
 )

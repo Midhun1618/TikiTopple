@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.voxcom.tikitopple.R
+import com.voxcom.tikitopple.model.PlayerAvatars
 import com.voxcom.tikitopple.model.LobbyPlayer
 
 class LobbyAdapter(
@@ -38,6 +39,9 @@ class LobbyAdapter(
         val hostText = view.findViewById<TextView>(R.id.isHost)
 
         playerName.text = player.name
+
+        // NEW — fixed avatar per player, independent of list position
+        readyImage.setImageResource(PlayerAvatars.RES[player.avatarIndex])
 
         if (player.host) {
             hostText.visibility = View.VISIBLE

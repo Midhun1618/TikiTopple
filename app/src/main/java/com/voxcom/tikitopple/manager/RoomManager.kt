@@ -136,7 +136,9 @@ class RoomManager(
 
                     host = true,
 
-                    joinedAt = System.currentTimeMillis()
+                    joinedAt = System.currentTimeMillis(),
+
+                    avatarIndex = 0
 
                 )
 
@@ -266,6 +268,11 @@ class RoomManager(
                     return@addOnSuccessListener
                 }
 
+                val usedIndices = playersSnapshot.children
+                    .mapNotNull { it.child("avatarIndex").getValue(Int::class.java) }
+                    .toSet()
+                val avatarIndex = (0..3).first { it !in usedIndices }
+
                 if (playersSnapshot.hasChild(uid)) {
 
                     saveCurrentRoom(roomCode)
@@ -289,7 +296,8 @@ class RoomManager(
                             name = name,
                             ready = false,
                             host = false,
-                            joinedAt = System.currentTimeMillis()
+                            joinedAt = System.currentTimeMillis(),
+                            avatarIndex = avatarIndex
                         )
 
                         database.child("rooms")

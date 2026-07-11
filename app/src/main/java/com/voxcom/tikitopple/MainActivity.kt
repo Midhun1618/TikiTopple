@@ -27,10 +27,12 @@ import com.google.firebase.database.*
 import com.voxcom.tikitopple.manager.*
 import com.voxcom.tikitopple.model.GameData
 import com.voxcom.tikitopple.model.GamePhase
+import com.voxcom.tikitopple.model.PlayerAvatars
 
 class MainActivity : AppCompatActivity() {
     private lateinit var board: FrameLayout
     private lateinit var arrayText: TextView
+    private lateinit var playerAvatars: List<ImageView>
 
 
     private lateinit var playerPanels: List<ConstraintLayout>
@@ -178,6 +180,13 @@ class MainActivity : AppCompatActivity() {
             findViewById(R.id.player2Score),
             findViewById(R.id.player3Score),
             findViewById(R.id.player4Score)
+        )
+
+        playerAvatars = listOf(
+            findViewById(R.id.player1Avatar),
+            findViewById(R.id.player2Avatar),
+            findViewById(R.id.player3Avatar),
+            findViewById(R.id.player4Avatar)
         )
 
         roundOverlay = findViewById(R.id.roundOverlay)
@@ -380,6 +389,7 @@ class MainActivity : AppCompatActivity() {
             val player = game.players[uid] ?: return@forEachIndexed
 
             playerScores[index].text = player.score.toString()
+            playerAvatars[index].setImageResource(PlayerAvatars.RES[player.avatarIndex])
 
             panel.setBackgroundColor(
 

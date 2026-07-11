@@ -10,6 +10,8 @@ data class LobbyPlayer(
 
     val host: Boolean = false,
 
-    val joinedAt: Long = 0L
+    val joinedAt: Long = 0L,
+
+    val avatarIndex: Int = 0
 
 )

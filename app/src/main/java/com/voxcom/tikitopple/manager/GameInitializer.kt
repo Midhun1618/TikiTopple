@@ -186,7 +186,9 @@ class GameInitializer(
 
                 secretCard = assignments[it.uid]!!,
 
-                cards = ActionCardManager.deal()
+                cards = ActionCardManager.deal(),
+
+                avatarIndex = it.avatarIndex
 
             )
 

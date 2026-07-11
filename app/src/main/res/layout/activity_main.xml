@@ -5,6 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/gameplay_bg"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/player1"
@@ -40,10 +50,10 @@
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/player1Avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/cardview_dark_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/black"
-                    android:padding="3dp"
+                    android:padding="6dp"
                     android:text="00"
                     android:textColor="@color/white"
                     android:textSize="20sp"
@@ -71,10 +81,10 @@
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/player2Avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/cardview_dark_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -102,10 +112,10 @@
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/player3Avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/cardview_dark_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -133,11 +143,10 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/player4Avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@color/cardview_dark_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,7 +178,8 @@
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/board">
+                app:layout_constraintTop_toTopOf="@+id/board"
+                app:layout_constraintVertical_bias="0.75">
 
                 <ImageView
                     android:id="@+id/actionCardBtn"
@@ -187,7 +197,8 @@
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/board">
+                app:layout_constraintTop_toTopOf="@+id/board"
+                app:layout_constraintVertical_bias="0.75">
 
                 <ImageView
                     android:id="@+id/secretCardBtn"
