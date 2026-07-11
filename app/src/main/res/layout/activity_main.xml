@@ -25,20 +25,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/array"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="A B C D E F G H I"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal"
             android:layout_marginBottom="12dp">
 
@@ -52,9 +43,8 @@
                 <ImageView
                     android:id="@+id/player1Avatar"
                     android:layout_width="70dp"
+                    android:src="@drawable/avatar1"
                     android:layout_height="70dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -63,16 +53,17 @@
                     android:id="@+id/player1Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/black"
-                    android:padding="6dp"
+                    android:fontFamily="@font/bungee_font"
                     android:text="00"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:layout_marginTop="58dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/wooden_text_d"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/player2"
                 android:layout_width="wrap_content"
@@ -83,9 +74,8 @@
                 <ImageView
                     android:id="@+id/player2Avatar"
                     android:layout_width="70dp"
+                    android:src="@drawable/avatar2"
                     android:layout_height="70dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -94,16 +84,17 @@
                     android:id="@+id/player2Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/black"
-                    android:padding="3dp"
+                    android:fontFamily="@font/bungee_font"
                     android:text="00"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:layout_marginTop="58dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/wooden_text_d"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/player3"
                 android:layout_width="wrap_content"
@@ -114,9 +105,8 @@
                 <ImageView
                     android:id="@+id/player3Avatar"
                     android:layout_width="70dp"
+                    android:src="@drawable/avatar3"
                     android:layout_height="70dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -125,16 +115,17 @@
                     android:id="@+id/player3Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/black"
-                    android:padding="3dp"
+                    android:fontFamily="@font/bungee_font"
                     android:text="00"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:layout_marginTop="58dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/wooden_text_d"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/player4"
                 android:layout_width="wrap_content"
@@ -145,9 +136,8 @@
                 <ImageView
                     android:id="@+id/player4Avatar"
                     android:layout_width="70dp"
+                    android:src="@drawable/avatar4"
                     android:layout_height="70dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -156,15 +146,18 @@
                     android:id="@+id/player4Score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/black"
-                    android:padding="3dp"
+                    android:fontFamily="@font/bungee_font"
                     android:text="00"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
+                    android:layout_marginTop="58dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/wooden_text_d"
+                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

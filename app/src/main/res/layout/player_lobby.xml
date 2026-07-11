@@ -8,18 +8,31 @@
         android:id="@+id/isReady"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:padding="2dp"
-        android:background="@color/green"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PlayerUsername"
-        android:id="@+id/playerName"/>
-    <TextView
-        android:id="@+id/isHost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Host"
-        android:layout_marginStart="15dp"
-        android:visibility="gone"/>
+        android:padding="2dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/wooden_plank_wide"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PlayerUsername"
+            android:textColor="@color/wooden_text_d"
+            android:fontFamily="@font/bungee_font"
+            android:layout_marginStart="18dp"
+            android:id="@+id/playerName"/>
+        <TextView
+            android:id="@+id/isHost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Host"
+
+            android:textColor="@color/wooden_text_l"
+            android:fontFamily="@font/bungee_font"
+            android:layout_marginStart="15dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
 </LinearLayout>

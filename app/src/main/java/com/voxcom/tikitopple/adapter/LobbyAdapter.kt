@@ -51,15 +51,11 @@ class LobbyAdapter(
 
         if (player.ready) {
 
-            readyImage.setBackgroundColor(
-                ContextCompat.getColor(context, android.R.color.holo_green_light)
-            )
+            readyImage.setBackgroundResource(R.drawable.active_green)
 
         } else {
 
-            readyImage.setBackgroundColor(
-                ContextCompat.getColor(context, android.R.color.darker_gray)
-            )
+            readyImage.setBackgroundResource(R.drawable.inactive_green)
 
         }
 

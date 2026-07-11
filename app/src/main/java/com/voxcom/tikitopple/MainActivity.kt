@@ -31,7 +31,6 @@ import com.voxcom.tikitopple.model.PlayerAvatars
 
 class MainActivity : AppCompatActivity() {
     private lateinit var board: FrameLayout
-    private lateinit var arrayText: TextView
     private lateinit var playerAvatars: List<ImageView>
 
 
@@ -39,9 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var playerScores: List<TextView>
 
-    private val activeColor = Color.parseColor("#4CAF50")
+    private val activeColor = R.drawable.active_green
 
-    private val inactiveColor = Color.parseColor("#616161")
+    private val inactiveColor = R.drawable.inactive_green
 
     data class Tiki(
         val id: Int,
@@ -163,7 +162,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         board = findViewById(R.id.board)
-        arrayText = findViewById(R.id.array)
 
         actionCardBtn = findViewById(R.id.actionCardBtn)
         secretCardBtn = findViewById(R.id.secretCardBtn)
@@ -391,7 +389,7 @@ class MainActivity : AppCompatActivity() {
             playerScores[index].text = player.score.toString()
             playerAvatars[index].setImageResource(PlayerAvatars.RES[player.avatarIndex])
 
-            panel.setBackgroundColor(
+            playerAvatars[index].setBackgroundResource(
 
                 if (uid == game.currentTurn)
                     activeColor
@@ -622,7 +620,6 @@ class MainActivity : AppCompatActivity() {
         boardOrder.clear()
         boardOrder.addAll(newOrder)
         refreshBoard()
-        updateArrayText()
     }
     private fun refreshBoard() {
         boardOrder.forEachIndexed { index, tiki ->
@@ -635,7 +632,6 @@ class MainActivity : AppCompatActivity() {
                 .setDuration(ANIMATION_DURATION)
                 .start()
         }
-        updateArrayText()
     }
     private fun animateMove(
         oldBoard: List<Int>,
@@ -828,14 +824,6 @@ class MainActivity : AppCompatActivity() {
 
         return board.paddingTop + (emptySlotsAbove + index) * blockSpacing
     }
-    private fun updateArrayText() {
-
-        arrayText.text = boardOrder.joinToString(
-            prefix = "[",
-            postfix = "]"
-        ) { "T${it.id}" }
-
-    }
     private fun showSecretCardDialog() {
 
         val game = gameData ?: return
@@ -925,8 +913,6 @@ class MainActivity : AppCompatActivity() {
             boardOrder.add(tiki)
 
         }
-
-        updateArrayText()
 
     }
     private fun showActionCardDialog() {
