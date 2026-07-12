@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -53,6 +54,8 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
     private lateinit var uid: String
     private var ready = false
 
+    private lateinit var leftLeaf : ImageView
+    private lateinit var rightLeaf : ImageView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +87,12 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
         initializeButtons()
 
 
+        val animSwingR = AnimationUtils.loadAnimation(this, R.anim.swing_right)
+        val animSwingL = AnimationUtils.loadAnimation(this, R.anim.swing_left)
+
+        leftLeaf.startAnimation(animSwingR)
+        rightLeaf.startAnimation(animSwingL)
+
     }
 
     private fun initializeViews() {
@@ -111,6 +120,9 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
         loadingOverlay = findViewById(R.id.loadingOverlay)
         loadingStatusTv = findViewById(R.id.loadingStatusTv)
+
+        leftLeaf = findViewById(R.id.leaf_left)
+        rightLeaf = findViewById(R.id.leaf_right)
 
         adapter = LobbyAdapter(
             this,
