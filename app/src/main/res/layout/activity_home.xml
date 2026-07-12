@@ -31,15 +31,21 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/title_img"/>
 
         <TextView
             android:id="@+id/usernameTv"
             android:textSize="20sp"
-            android:layout_marginTop="30dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/nakula"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="username" />
@@ -58,12 +64,16 @@
             android:id="@+id/hostBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/tribal_boots"
+            android:textSize="20dp"
             android:text="Create" />
 
         <Button
             android:id="@+id/joinBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/tribal_boots"
+            android:textSize="20dp"
             android:text="Join" />
     </LinearLayout>
 
@@ -129,9 +139,13 @@
             android:id="@+id/playersRoomList"
             android:layout_width="match_parent"
             android:layout_marginHorizontal="24dp"
-            android:layout_height="500dp"/>
+            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/readyBtn"
+            android:backgroundTint="@color/green_dark"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:fontFamily="@font/tribal_boots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="ready"/>
