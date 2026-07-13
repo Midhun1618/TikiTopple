@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:text="PlayerUsername"
             android:textColor="@color/wooden_text_d"
-            android:fontFamily="@font/bungee_font"
+            android:fontFamily="@font/nakula"
             android:layout_marginStart="18dp"
             android:id="@+id/playerName"/>
         <TextView

@@ -66,6 +66,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/tribal_boots"
             android:textSize="20dp"
+            android:backgroundTint="@color/green_dark"
             android:text="Create" />
 
         <Button
@@ -74,6 +75,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/tribal_boots"
             android:textSize="20dp"
+            android:layout_marginStart="5dp"
+            android:backgroundTint="@color/green_dark"
             android:text="Join" />
     </LinearLayout>
 
@@ -82,6 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:gravity="center"
+        android:background="@drawable/round_edge_black_mask"
         android:orientation="vertical"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -93,20 +97,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:paddingTop="15dp"
             android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/roomcodeHTv"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/bungee_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Room Code" />
 
             <Button
                 android:id="@+id/copyBtn"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/nakula"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/green"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="copy code" />
+                android:text="Copy Code" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/joinLL"
@@ -114,26 +126,37 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="15dp">
 
             <EditText
                 android:id="@+id/roomcodeEt"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:paddingHorizontal="20dp"
+                android:fontFamily="@font/bungee_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/round_edge_white_mask"
                 android:hint="Room code" />
 
             <Button
                 android:id="@+id/searchBtn"
+                android:backgroundTint="@color/green"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/nakula"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Join Room" />
+                android:text="Join" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/lobbyList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:paddingBottom="15dp">
 
         <ListView
             android:id="@+id/playersRoomList"
