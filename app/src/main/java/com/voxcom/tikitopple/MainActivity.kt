@@ -10,6 +10,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -105,8 +106,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var winnerScore: TextView
     private lateinit var winnerLeaderboard: TextView
 
-    private lateinit var playAgainBtn: Button
-    private lateinit var homeBtn: Button
+    private lateinit var playAgainBtn: ImageView
+    private lateinit var homeBtn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -280,17 +281,17 @@ class MainActivity : AppCompatActivity() {
                     gameData = game
                     updatePlayerPanels()
 
-                    val me = game.players[uid]
-
-                    me?.let {
-
-                        secretCardBtn.setImageResource(
-                            SecretCardManager.getImage(
-                                it.secretCard
-                            )
-                        )
-
-                    }
+//                    val me = game.players[uid]
+//
+//                    me?.let {
+//
+//                        secretCardBtn.setImageResource(
+//                            SecretCardManager.getImage(
+//                                it.secretCard
+//                            )
+//                        )
+//
+//                    }
 
                     updateActionCards()
                     when (game.gamePhase) {
@@ -844,8 +845,11 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
-        val secretCardImage =
-            dialogView.findViewById<ImageView>(R.id.secretCardImage)
+        val secretCardImage = dialogView.findViewById<ImageView>(R.id.secretCardImage)
+        val rotatinglight = dialogView.findViewById<ImageView>(R.id.rotatImg)
+
+        val rotate = AnimationUtils.loadAnimation(this, R.anim.rotater)
+        rotatinglight.startAnimation(rotate)
 
         secretCardImage.setImageResource(
             SecretCardManager.getImage(me.secretCard)

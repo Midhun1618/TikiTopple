@@ -187,7 +187,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="14dp"
-                    android:src="@drawable/action_card_btn" />
+                    android:src="@drawable/action_cards" />
             </LinearLayout>
 
             <LinearLayout
@@ -206,7 +206,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_margin="14dp"
-                    android:src="@drawable/secret_card_btn" />
+                    android:src="@drawable/secret_card" />
             </LinearLayout>
 
             <FrameLayout
@@ -236,17 +236,26 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="700dp"
+            android:src="@drawable/winner_board_overlay"
+            android:scaleType="fitXY"
+            android:id="@+id/roundbaord_img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <LinearLayout
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical"
             android:padding="24dp"
+            android:layout_marginTop="18dp"
             android:elevation="10dp"
             android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/roundbaord_img"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -255,20 +264,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ROUND COMPLETE"
+                android:fontFamily="@font/nakula"
+                android:textColor="@color/wooden_text_dark"
                 android:textStyle="bold"
-                android:textSize="24sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/roundScoreTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
+                android:fontFamily="@font/nakula"
+                android:textColor="@color/wooden_text_dark"
                 android:textSize="18sp"/>
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:progressTint="@color/wooden_text_dark"
                 android:layout_marginTop="20dp"/>
 
             <TextView
@@ -276,6 +290,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:textColor="@color/wooden_text_dark"
+                android:fontFamily="@font/nakula"
                 android:text="Preparing next round..."/>
 
         </LinearLayout>
@@ -286,7 +302,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#AA000000"
-        android:visibility="">
+        android:visibility="gone">
         <ImageView
             android:layout_width="500dp"
             android:layout_height="700dp"

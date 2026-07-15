@@ -2,20 +2,27 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="330dp"
+    android:layout_height="350dp"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@drawable/wood_plank"
     android:layout_marginHorizontal="50dp"
     android:gravity="center">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Action Cards"
+        android:fontFamily="@font/nakula"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:layout_marginBottom="12dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wooden_tray"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,18 +33,21 @@
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_1"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card2"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_2"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card3"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_3"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
     </LinearLayout>
     <LinearLayout
@@ -50,19 +60,23 @@
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_t"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card5"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_t"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
         <ImageView
             android:id="@+id/card6"
             android:layout_width="80dp"
             android:layout_height="100dp"
             android:src="@drawable/a_x"
+            android:background="@drawable/card_slot"
             android:layout_margin="6dp"/>
+    </LinearLayout>
     </LinearLayout>
 
 
