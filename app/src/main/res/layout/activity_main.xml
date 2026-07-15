@@ -286,15 +286,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#AA000000"
-        android:visibility="gone">
+        android:visibility="">
 
         <LinearLayout
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/wood_plank"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/winner_board_overlay"
             android:orientation="vertical"
             android:padding="24dp"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -303,10 +303,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🏆 WINNER"
+                android:text="WiNNER"
+                android:layout_marginTop="14dp"
                 android:textStyle="bold"
+                android:fontFamily="@font/nakula"
                 android:textSize="28sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/wooden_text_dark"/>
 
             <TextView
                 android:id="@+id/winnerTitle"
@@ -314,18 +316,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="LittleElephant99"
+                android:fontFamily="@font/nakula"
                 android:textStyle="bold"
                 android:textSize="24sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/text_red"/>
 
             <TextView
                 android:id="@+id/winnerScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:fontFamily="@font/nakula"
                 android:text="26 Points"
                 android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/text_blue"/>
 
             <View
                 android:layout_width="match_parent"
@@ -338,22 +342,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
+                android:fontFamily="@font/nakula"
                 android:textSize="18sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/wooden_text_dark"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/playAgainBtn"
-                android:layout_width="match_parent"
+                android:layout_width="130dp"
+                android:src="@drawable/playagain_button"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Play Again"/>
-
-            <Button
+                android:layout_marginTop="24dp"/>
+            <ImageView
                 android:id="@+id/homeBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Home"/>
+                android:layout_width="130dp"
+                android:src="@drawable/home_button"
+                android:layout_height="60dp"/>
+
 
         </LinearLayout>
 

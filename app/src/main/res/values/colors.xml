@@ -6,5 +6,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="wooden_text_d">#4B1F06</color>
     <color name="wooden_text_dark">#E4381002</color>
+    <color name="text_blue">#E4248FDB</color>
+    <color name="text_red">#E4DB2458</color>
     <color name="wooden_text_l">#FFAE87</color>
 </resources>

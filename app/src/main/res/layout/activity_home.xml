@@ -184,7 +184,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#CC000000"
-        android:visibility=""
+        android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintTop_toTopOf="parent"
