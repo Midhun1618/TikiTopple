@@ -5,5 +5,6 @@
     <color name="green_dark">#033A09</color>
     <color name="white">#FFFFFFFF</color>
     <color name="wooden_text_d">#4B1F06</color>
+    <color name="wooden_text_dark">#E4381002</color>
     <color name="wooden_text_l">#FFAE87</color>
 </resources>

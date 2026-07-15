@@ -62,6 +62,7 @@
 
         <Button
             android:id="@+id/hostBtn"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/tribal_boots"
@@ -71,6 +72,7 @@
 
         <Button
             android:id="@+id/joinBtn"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/tribal_boots"
@@ -99,6 +101,7 @@
             android:gravity="center"
             android:paddingTop="15dp"
             android:visibility="gone"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <TextView
@@ -126,6 +129,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:gravity="center"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal"
             android:paddingTop="15dp">
 
@@ -165,9 +169,10 @@
             android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/readyBtn"
-            android:backgroundTint="@color/green_dark"
+            android:backgroundTint="@color/green"
             android:textColor="@color/white"
             android:textSize="30dp"
+            android:layout_marginHorizontal="24dp"
             android:fontFamily="@font/tribal_boots"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -179,7 +184,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#CC000000"
-        android:visibility="gone"
+        android:visibility=""
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintTop_toTopOf="parent"
@@ -189,46 +194,55 @@
 
         <LinearLayout
             android:layout_width="280dp"
-            android:layout_height="wrap_content"
+            android:layout_height="380dp"
             android:orientation="vertical"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:padding="24dp"
-            android:background="@android:color/white"
+            android:background="@drawable/match_making_paper"
             android:elevation="12dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <ProgressBar
-                android:id="@+id/loadingProgress"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="60dp"
-                android:layout_height="60dp"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Preparing Match"
+                android:textColor="@color/wooden_text_dark"
                 android:textStyle="bold"
-                android:textSize="22sp"
+                android:fontFamily="@font/tribal_boots"
+                android:textSize="28sp"
                 android:layout_marginTop="20dp"/>
+
+            <ProgressBar
+                android:id="@+id/loadingProgress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:progressTint="@color/wooden_text_dark"
+                android:layout_margin="15dp"/>
+
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/tribal_boots"
                 android:text="Setting up your game..."
                 android:textSize="15sp"
-                android:textColor="#666666"
+                android:textColor="@color/wooden_text_dark"
                 android:layout_marginTop="8dp"/>
 
             <TextView
                 android:id="@+id/loadingStatusTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Creating Match..."
+                android:text="Creating Room"
+                android:fontFamily="@font/nakula"
                 android:textStyle="bold"
                 android:textSize="18sp"
+                android:textColor="@color/wooden_text_dark"
                 android:layout_marginTop="28dp"/>
 
         </LinearLayout>
