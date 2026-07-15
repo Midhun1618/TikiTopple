@@ -1560,4 +1560,19 @@ class MainActivity : AppCompatActivity() {
             mediaPlayer = null
         }
     }
+    override fun onPause() {
+        super.onPause()
+        bgm?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bgm?.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bgm?.release()
+        bgm = null
+    }
 }
