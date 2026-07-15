@@ -3,6 +3,7 @@ package com.voxcom.tikitopple
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -27,6 +28,8 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
     private lateinit var hostBtn: Button
     private lateinit var joinBtn: Button
+
+    private var mediaPlayer: MediaPlayer? = null
 
     private lateinit var hostLL: LinearLayout
     private lateinit var joinLL: LinearLayout
@@ -92,6 +95,10 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
 
         leftLeaf.startAnimation(animSwingR)
         rightLeaf.startAnimation(animSwingL)
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.home_bgm)
+        mediaPlayer?.isLooping = true   // Loop forever
+        mediaPlayer?.start()
 
     }
 
@@ -357,6 +364,21 @@ class HomeActivity : AppCompatActivity(), RoomCallback {
             }
         ).initializeGame()
 
+    }
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mediaPlayer?.start()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
 }

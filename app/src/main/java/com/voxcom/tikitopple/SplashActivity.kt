@@ -2,6 +2,8 @@ package com.voxcom.tikitopple
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +16,8 @@ import com.voxcom.tikitopple.utils.PlayerNameGenerator
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var loader1 : ImageView
+    private lateinit var loader2 : ImageView
     private val database = FirebaseDatabase.getInstance().reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +30,14 @@ class SplashActivity : AppCompatActivity() {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
+        loader1 = findViewById(R.id.rotating_splash)
+        loader2 = findViewById(R.id.anti_rotating_splash)
+
+        val rotateR = AnimationUtils.loadAnimation(this, R.anim.rotater)
+        val rotateL = AnimationUtils.loadAnimation(this, R.anim.anti_rotator)
+
+        loader1.startAnimation(rotateR)
+        loader2.startAnimation(rotateL)
 
         initializeFirebase()
     }

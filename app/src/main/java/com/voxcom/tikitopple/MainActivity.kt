@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     private val activeColor = R.drawable.active_green
 
-    private val inactiveColor = R.drawable.inactive_green
+    private val inactiveColor = R.drawable.nothing
 
     data class Tiki(
         val id: Int,
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private val tikis = mutableListOf<Tiki>()
     private val tossedTikiIds = mutableSetOf<Int>()
+
+    private var bgm: MediaPlayer? = null
+    private var mediaPlayer: MediaPlayer? = null
 
     // boardOrder always reflects what is CURRENTLY ON SCREEN.
     // It is only ever replaced AFTER an animation finishes.
@@ -232,6 +236,11 @@ class MainActivity : AppCompatActivity() {
         setupSecretCardButton()
 
         listenGame()
+
+        bgm = MediaPlayer.create(this, R.raw.game_bgm)
+        bgm?.isLooping = true   // Loop forever
+        bgm?.setVolume(8f, 8f)   // 100%
+        bgm?.start()
 
     }
 
@@ -1051,6 +1060,17 @@ class MainActivity : AppCompatActivity() {
                     onFinished()
                 }
             })
+            moveLeft.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
+            })
+
+            moveRight.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
+            })
 
             start()
         }
@@ -1131,6 +1151,17 @@ class MainActivity : AppCompatActivity() {
 
                 }
 
+            })
+            moveLeft.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
+            })
+
+            moveRight.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
             })
 
             start()
@@ -1226,6 +1257,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
+            moveLeft.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
+            })
+
+            moveRight.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    moveSfx()
+                }
+            })
 
             start()
 
@@ -1308,12 +1350,25 @@ class MainActivity : AppCompatActivity() {
             start()
 
         }
+        moveLeft.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                moveSfx()
+            }
+        })
+
+        moveRight.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                moveSfx()
+            }
+        })
 
     }
     private fun tikiToss(selected: Tiki, onFinished: () -> Unit) {
 
         val frames = getToastFrames(selected.id)
         tossedTikiIds.add(selected.id)
+        smashSfx()
+
 
         if (frames.isEmpty()) {
             onFinished()
@@ -1478,5 +1533,31 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+    private fun moveSfx() {
+        bgm?.setVolume(0.3f, 0.3f)
+        mediaPlayer?.release()
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.move)
+        mediaPlayer?.start()
+
+        mediaPlayer?.setOnCompletionListener {
+            bgm?.setVolume(0.8f, 0.8f)
+            it.release()
+            mediaPlayer = null
+        }
+    }
+    private fun smashSfx() {
+        bgm?.setVolume(0.3f, 0.3f)
+        mediaPlayer?.release()
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.tiki_smash)
+        mediaPlayer?.start()
+
+        mediaPlayer?.setOnCompletionListener {
+            bgm?.setVolume(0.8f, 0.8f)
+            it.release()
+            mediaPlayer = null
+        }
     }
 }

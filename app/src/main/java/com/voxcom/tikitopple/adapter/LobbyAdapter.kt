@@ -55,7 +55,7 @@ class LobbyAdapter(
 
         } else {
 
-            readyImage.setBackgroundResource(R.drawable.inactive_green)
+            readyImage.setBackgroundResource(R.drawable.nothing)
 
         }
 

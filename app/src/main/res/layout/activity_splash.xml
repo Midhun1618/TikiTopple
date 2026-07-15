@@ -8,4 +8,26 @@
     tools:context=".SplashActivity"
     android:background="@color/black">
 
+    <ImageView
+        android:id="@+id/rotating_splash"
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/splash_fg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageView
+        android:id="@+id/anti_rotating_splash"
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/splash_rotator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
