@@ -241,8 +241,8 @@ class MainActivity : AppCompatActivity() {
         listenGame()
 
         bgm = MediaPlayer.create(this, R.raw.game_bgm)
-        bgm?.isLooping = true   // Loop forever
-        bgm?.setVolume(8f, 8f)   // 100%
+        bgm?.isLooping = true
+        bgm?.setVolume(8f, 8f)
         bgm?.start()
 
     }
@@ -1412,66 +1412,66 @@ class MainActivity : AppCompatActivity() {
         return when (tikiId) {
 
             1 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t1_a,
+                R.drawable.t1_b,
+                R.drawable.t1_c,
+                R.drawable.t1_d
             )
 
             2 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t2_a,
+                R.drawable.t2_b,
+                R.drawable.t2_c,
+                R.drawable.t2_d
             )
 
             3 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t3_a,
+                R.drawable.t3_b,
+                R.drawable.t3_c,
+                R.drawable.t3_d
             )
 
             4 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t4_a,
+                R.drawable.t4_b,
+                R.drawable.t4_c,
+                R.drawable.t4_d
             )
 
             5 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t5_a,
+                R.drawable.t5_b,
+                R.drawable.t5_c,
+                R.drawable.t5_d
             )
 
             6 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t6_a,
+                R.drawable.t6_b,
+                R.drawable.t6_c,
+                R.drawable.t6_d
             )
 
             7 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t7_a,
+                R.drawable.t7_b,
+                R.drawable.t7_c,
+                R.drawable.t7_d
             )
 
             8 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t8_a,
+                R.drawable.t8_b,
+                R.drawable.t8_c,
+                R.drawable.t8_d
             )
 
             9 -> listOf(
-                R.drawable.ta,
-                R.drawable.tb,
-                R.drawable.tc,
-                R.drawable.td
+                R.drawable.t9_a,
+                R.drawable.t9_b,
+                R.drawable.t9_c,
+                R.drawable.t9_d
             )
 
             else -> emptyList()
