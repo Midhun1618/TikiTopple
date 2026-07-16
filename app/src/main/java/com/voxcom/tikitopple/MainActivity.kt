@@ -429,7 +429,7 @@ class MainActivity : AppCompatActivity() {
 
             selectedCard = null
 
-            actionCardBtn.setImageResource(R.drawable.action_card_btn)
+            actionCardBtn.setImageResource(R.drawable.action_cards)
 
         }
 
@@ -451,8 +451,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun processBoardUpdate(game: GameData) {
 
-        // boardOrder is populated by createViews() with the initial layout.
-        // If it hasn't been created yet, there's nothing to diff against.
         if (boardOrder.isEmpty()) return
 
         val oldBoard = boardOrder.map { it.id }
@@ -771,7 +769,7 @@ class MainActivity : AppCompatActivity() {
 
         selectedCard = null
         selectedTiki = null
-        actionCardBtn.setImageResource(R.drawable.action_card_btn)
+        actionCardBtn.setImageResource(R.drawable.action_cards)
 
     }
     private fun calculateBoardMetrics() {
@@ -965,10 +963,6 @@ class MainActivity : AppCompatActivity() {
 
             img.setImageResource(drawable)
 
-            // Played cards are marked invisible (not removed) once
-            // ActionCardManager.removePlayedCard() drops them from me.cards.
-            // They become visible again automatically once a new round
-            // deals a fresh hand via ActionCardManager.deal().
             if (me.cards.contains(cardId)) {
 
                 img.visibility = View.VISIBLE

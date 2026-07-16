@@ -67,7 +67,9 @@ class RoundManager(
 
                 secretCard = assignments[player.uid]!!,
 
-                cards = ActionCardManager.deal()
+                cards = ActionCardManager.deal(),
+
+                avatarIndex = player.avatarIndex
 
             )
 
