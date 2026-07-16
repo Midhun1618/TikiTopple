@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaPlayer
@@ -228,6 +229,7 @@ class MainActivity : AppCompatActivity() {
 
         homeBtn.setOnClickListener {
 
+            startActivity(Intent(this, HomeActivity::class.java))
             finish()
 
         }
@@ -413,7 +415,7 @@ class MainActivity : AppCompatActivity() {
         val myTurn = game.currentTurn == uid
 
         actionCardBtn.alpha =
-            if (myTurn) 1f else 0.4f
+            if (myTurn) 1f else 0.7f
 
         actionCardBtn.isEnabled = myTurn
 
